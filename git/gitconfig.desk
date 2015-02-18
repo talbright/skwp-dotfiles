@@ -1,6 +1,5 @@
-[user]
-  name = Trent Albright
-  email = talbright@salesforce.com
+# set your user tokens as environment variables, such as ~/.secrets
+# See the README for examples.
 [color]
   ui = true
 [color "branch"]
@@ -22,7 +21,7 @@
   snapshots = !git stash list --grep snapshot
 
   #via http://stackoverflow.com/questions/5188320/how-can-i-get-a-list-of-git-branches-ordered-by-most-recent-commit
-  recent-branches = !git for-each-ref --count=15 --sort=-committerdate refs/heads/ --format='%(refname:short)'
+  recent-branches = !git for-each-ref --count=5 --sort=-committerdate refs/heads/ --format='%(refname:short)'
 
   # branch
   b = branch -v                     # branch (verbose)
@@ -105,95 +104,27 @@
   whitespace = nowarn
 [branch]
   autosetupmerge = true
+	autosetuprebase = always
 [push]
   # 'git push' will push the current branch to its tracking branch
   # the usual default is to push all branches
-  default = upstream
+  default = tracking
 [core]
   autocrlf = false
   editor = vim
   excludesfile = ~/.yadr/git/gitignore
 [advice]
   statusHints = false
-  # Note: `auto` value in this block means command will only use ANSI color when output is written to terminal
-  # A boolean to enable/disable color in the output of git-branch
-  branch = auto
-  # Whether to use ANSI escape sequences to add color to patches.
-  diff = auto
-  # Whether to highlight matches.
-  grep = auto
-  # Whether to enable/disable color in the output of `git status`
-  status = true
-  # Whether to enable/disable colored output when the pager is in use
-  pager = true
-[column]
-  # Note: `auto` value in this block means command will display output in columns if terminal supports it
-  # Specify whether supported commands should output in columns
-  ui = auto
 [diff]
-  # Whether to detect renames. If set to "copies" or "copy", it will detect copies as well.
-  renames = copy
-	tool = diffmerge
-[branch]
-	autosetuprebase = always
+  # Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
+  # instead of a/b/c/d as prefixes for patches
+  mnemonicprefix = true
+	algorithm = patience
 [rerere]
-  # Activate recording of resolved conflicts, so that identical conflict hunks can be resolved automatically
+  # Remember my merges
+  # http://gitfu.wordpress.com/2008/04/20/git-rerere-rereremember-what-you-did-last-time/
 	enabled = 1
+[include]
+  path = .gitconfig.user
 [rebase]
-  # Whether to show a diffstat of what changed upstream since the last rebase
 	stat = true
-[github]
-  # Useful if you use the hub gem for anything
-  user = {{github_username}}
-[core]
-  # choose editor below or it will use GIT_EDITOR or EDITOR environment variable
-  #editor = subl -w #Sublime
-  #editor = vim #vim
-  # Comma separated list of common whitespace problems to notice
-	whitespace = space-before-tab,tabwidth=2,trailing-space
-	excludesfile = /Users/talbright/.gitignore_global
-[push]
-  # Specify which action git push should take if no refspec is given on the command line
-  default = nothing
-[alias]
-  # All below are optional. Feel free to add, remove, modify
-  br = branch
-  ci = commit
-  co = checkout
-  df = diff
-  rem = remote
-  st = "status --porcelain"
-  lsbr = branch
-  mvbr = "branch -m"
-  rmbr = "branch -d"
-  whbr = "branch -a --contains"
-  lsunmerged = "branch --no-merged"
-  lsrem = remote
-  mkrem = "remote add"
-  lstag = "tag -l"
-  mktag = "tag -a"
-  rmtag = "tag -d"
-  mvtag = "tag -m"
-  sdiff = "diff --stat"
-  shlog = "log --oneline --decorate"
-  stat = "status -sb"
-  wdiff = "diff --word-diff"
-  search = "log --all  --pretty=oneline -S"
-  lol = "log --no-merges --graph --decorate --pretty=oneline --abbrev-commit"
-  # Aliases contributed by Justin
-  up = !git fetch origin && rebase origin/develop
-  ir = @git rebase -i origin/develop
-  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
-[difftool "diffmerge"]
-	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
-[merge]
-	tool = diffmerge
-[mergetool "diffmerge"]
-	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
-	trustExitCode = true
